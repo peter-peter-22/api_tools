@@ -1,0 +1,76 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.openapi.generator' version '7.17.0'
+    // creates the "./gradlew generateOpenApiDocs" task
+    id 'org.springdoc.openapi-gradle-plugin' version '1.9.0'
+}
+
+openApi {
+    outputDir.set(file("../frontend"))
+}
+
+group = "com.example"
+version = "0.0.1-SNAPSHOT"
+description = "Demo project for using open api and related tools."
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // core
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    // validation
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    // openapi
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9"
+    // lombok
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+    // test
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    // docker
+    //developmentOnly "org.springframework.boot:spring-boot-docker-compose"
+    // app.yaml
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.register('downloadOpenApiSpec') {
+    group = 'openapi'
+    description = 'Downloads the live OpenAPI spec from the running app into static files'
+
+    doLast {
+        def outputDir = layout.buildDirectory.dir('generated/openapi').get().asFile
+        outputDir.mkdirs()
+
+        // Requires the app to be running on port 8080
+        def jsonUrl = 'http://localhost:8080/v3/api-docs'
+        def yamlUrl = 'http://localhost:8080/v3/api-docs.yaml'
+
+        new URL(jsonUrl).withInputStream { i -> new File(outputDir, 'openapi.json').bytes = i.bytes }
+        new URL(yamlUrl).withInputStream { i -> new File(outputDir, 'openapi.yaml').bytes = i.bytes }
+
+        println "OpenAPI spec downloaded to ${outputDir}"
+        println "   → openapi.json"
+        println "   → openapi.yaml  ← THIS IS THE ONE YOU WANT"
+    }
+}
