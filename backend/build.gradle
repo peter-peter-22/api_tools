@@ -1,3 +1,5 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.7'
@@ -8,7 +10,7 @@ plugins {
 }
 
 openApi {
-    outputDir.set(file("../frontend"))
+    outputDir.set(file("$buildDir/"))
 }
 
 group = "com.example"
@@ -54,23 +56,22 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.register('downloadOpenApiSpec') {
-    group = 'openapi'
-    description = 'Downloads the live OpenAPI spec from the running app into static files'
-
-    doLast {
-        def outputDir = layout.buildDirectory.dir('generated/openapi').get().asFile
-        outputDir.mkdirs()
-
-        // Requires the app to be running on port 8080
-        def jsonUrl = 'http://localhost:8080/v3/api-docs'
-        def yamlUrl = 'http://localhost:8080/v3/api-docs.yaml'
-
-        new URL(jsonUrl).withInputStream { i -> new File(outputDir, 'openapi.json').bytes = i.bytes }
-        new URL(yamlUrl).withInputStream { i -> new File(outputDir, 'openapi.yaml').bytes = i.bytes }
-
-        println "OpenAPI spec downloaded to ${outputDir}"
-        println "   → openapi.json"
-        println "   → openapi.yaml  ← THIS IS THE ONE YOU WANT"
+tasks.register('generateTsClient', GenerateTask) {
+    generatorName.set('typescript-fetch')
+    inputSpec.set("$buildDir/openapi.json".toString())
+    outputDir.set("$rootDir/../frontend/src/api/generated".toString())
+    apiPackage.set('com.example.api')
+    modelPackage.set('com.example.model')
+    configOptions = [
+            supportsES6              : 'true',
+            withInterfaces           : 'true',
+            useSingleRequestParameter: 'true',
+            typescriptThreePlus      : 'true'
+    ]
+    // Depends on openapi.json generation
+    dependsOn generateOpenApiDocs
+    // Clean generated dir
+    doFirst {
+        delete fileTree(dir: outputDir, include: '**/*')
     }
 }
