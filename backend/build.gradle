@@ -10,7 +10,7 @@ plugins {
 }
 
 openApi {
-    outputDir.set(file("$buildDir/"))
+    outputDir.set(file("$rootDir/../frontend/src/api/generated"))
 }
 
 group = "com.example"
@@ -54,24 +54,4 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-tasks.register('generateTsClient', GenerateTask) {
-    generatorName.set('typescript-fetch')
-    inputSpec.set("$buildDir/openapi.json".toString())
-    outputDir.set("$rootDir/../frontend/src/api/generated".toString())
-    apiPackage.set('com.example.api')
-    modelPackage.set('com.example.model')
-    configOptions = [
-            supportsES6              : 'true',
-            withInterfaces           : 'true',
-            useSingleRequestParameter: 'true',
-            typescriptThreePlus      : 'true'
-    ]
-    // Depends on openapi.json generation
-    dependsOn generateOpenApiDocs
-    // Clean generated dir
-    doFirst {
-        delete fileTree(dir: outputDir, include: '**/*')
-    }
 }

@@ -12,7 +12,7 @@ public record UserCreateRequest(
 
         @NotBlank
         @Email(message = "Invalid email format")
-        @Schema(description = "Email address", example = "john@example.com")
+        @Schema(description = "Email address", example = "john@example.com", type = "string", format = "email")
         String email,
 
         @NotNull

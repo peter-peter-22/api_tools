@@ -3,6 +3,7 @@ package com.example.api_tools.controller;
 import com.example.api_tools.dto.UserCreateRequest;
 import com.example.api_tools.model.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,11 +30,6 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Create a new user")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created"),
-            @ApiResponse(responseCode = "400", description = "Invalid input",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateRequest request) {
         User user = new User(idCounter++, request.name(), request.email(), request.age());
         users.add(user);
@@ -41,7 +37,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return users;
+    @Operation(summary = "Get all users")
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok(users);
     }
 }
