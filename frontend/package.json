@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "openapi": "openapi-zod-client './src/api/generated/openapi.json' -o './src/api/generated/client.ts' --success-expr 'status >= 200 && status < 300'"
+    "openapi:users": "openapi-zod-client './src/api/generated/users.json' -o './src/api/generated/usersApi.ts'",
+    "openapi:orders": "openapi-zod-client './src/api/generated/orders.json' -o './src/api/generated/ordersApi.ts'",
+    "openapi": "pnpm openapi:users && pnpm openapi:orders"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

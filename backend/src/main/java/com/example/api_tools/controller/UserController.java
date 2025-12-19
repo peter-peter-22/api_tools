@@ -10,11 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -22,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @RestController
 @RequestMapping("/api/users")
 @Validated
-@Tag(name = "Users", description = "User management APIs")
+@Tag(name = "users", description = "User management APIs")
 public class UserController {
 
     private final List<User> users = new CopyOnWriteArrayList<>();
@@ -33,6 +36,8 @@ public class UserController {
     public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateRequest request) {
         User user = new User(idCounter++, request.name(), request.email(), request.age());
         users.add(user);
+        if(user!=null)
+       throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"test");
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 

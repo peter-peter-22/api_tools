@@ -1,5 +1,6 @@
 package com.example.api_tools.expection;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,13 @@ public class GlobalExceptionHandler {
 
         ErrorResponse response = new ErrorResponse("Validation failed", errors);
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse(ex.getMessage(), null));
     }
 }
 

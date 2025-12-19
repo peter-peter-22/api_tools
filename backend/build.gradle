@@ -5,12 +5,15 @@ plugins {
     id 'org.springframework.boot' version '3.5.7'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.openapi.generator' version '7.17.0'
-    // creates the "./gradlew generateOpenApiDocs" task
-    id 'org.springdoc.openapi-gradle-plugin' version '1.9.0'
+    id 'org.springdoc.openapi-gradle-plugin' version '1.9.0' // creates the "./gradlew generateOpenApiDocs" task
 }
 
 openApi {
     outputDir.set(file("$rootDir/../frontend/src/api/generated"))
+    groupedApiMappings.set([
+            "http://localhost:8080/v3/api-docs/users":"users.json",
+            "http://localhost:8080/v3/api-docs/orders":"orders.json"
+    ])
 }
 
 group = "com.example"

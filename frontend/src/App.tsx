@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from "react-hook-form"
 import type z from 'zod'
 import { ZodError } from 'zod'
-import { createApiClient, schemas } from './api/generated/client'
+import { createApiClient, schemas } from './api/generated/usersApi'
 
 type FormData = z.infer<typeof schemas.UserCreateRequest>
 
@@ -29,6 +29,7 @@ export default function App() {
           });
         }
       }
+      else console.error(err)
     }
   };
 
