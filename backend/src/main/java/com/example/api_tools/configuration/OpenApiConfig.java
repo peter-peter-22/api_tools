@@ -10,8 +10,8 @@ public class OpenApiConfig {
     @Bean
     public GroupedOpenApi usersApi() {
         return GroupedOpenApi.builder()
-                .group("users")  // Group name (appears in Swagger UI dropdown)
-                .pathsToMatch("/api/users/**")  // Include only these paths
+                .group("frontend")  // Group name (appears in Swagger UI dropdown)
+                .pathsToMatch("/api/users/**", "/api/orders/**")  // Include only these paths
                 // .packagesToScan("com.example.demo.controller.users")  // Alternative: by package
                 // For tag-based: .addOpenApiMethodFilter(method -> method.getTags().contains("users"))
                 .build();
@@ -20,8 +20,8 @@ public class OpenApiConfig {
     @Bean
     public GroupedOpenApi ordersApi() {
         return GroupedOpenApi.builder()
-                .group("orders")
-                .pathsToMatch("/api/orders/**")
+                .group("dashboard")
+                .pathsToMatch("/api/metrics")
                 // .addOpenApiMethodFilter(method -> method.getTags().contains("orders"))  // If using tags
                 .build();
     }
