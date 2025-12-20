@@ -1,10 +1,11 @@
 package com.example.api_tools.expection;
 
-import org.apache.coyote.BadRequestException;
+import com.example.api_tools.dto.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,13 +24,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex) {
-        return ResponseEntity
-                .badRequest()
-                .body(new ErrorResponse(ex.getMessage(), null));
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> handleCustomValidation(ValidationException ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(ex.getMessage(), ex.getErrors()));
     }
-}
 
-record ErrorResponse(String message, Map<String, String> errors) {
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatus(ResponseStatusException ex) {
+        ErrorResponse body = new ErrorResponse(ex.getReason());  // No field errors
+        return ResponseEntity.status(ex.getStatusCode()).body(body);
+    }
+
+    // Catch-all 500
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
+        // log.error("Unhandled", ex);
+        return ResponseEntity.internalServerError()
+                .body(new ErrorResponse("Unexpected error"));
+    }
 }

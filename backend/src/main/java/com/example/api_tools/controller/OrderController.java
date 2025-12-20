@@ -1,9 +1,7 @@
 package com.example.api_tools.controller;
 
 import com.example.api_tools.dto.OrderCreateRequest;
-import com.example.api_tools.dto.UserCreateRequest;
 import com.example.api_tools.model.Order;
-import com.example.api_tools.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,7 +24,7 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "Create a new order")
-    public ResponseEntity<Order> createUser(@Valid @RequestBody OrderCreateRequest request) {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderCreateRequest request) {
         Order user = new Order(idCounter++, request.itemId(), request.count(), request.userId());
         orders.add(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);

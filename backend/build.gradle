@@ -1,5 +1,3 @@
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.7'
@@ -9,10 +7,10 @@ plugins {
 }
 
 openApi {
-    outputDir.set(file("$rootDir/../frontend/src/api/generated"))
+    //outputDir.set(file("$rootDir/../frontend/src/api/generated"))
     groupedApiMappings.set([
-            "http://localhost:8080/v3/api-docs/users":"users.json",
-            "http://localhost:8080/v3/api-docs/orders":"orders.json"
+            "http://localhost:8080/v3/api-docs/frontend" : "$rootDir/../frontend/src/api/generated/api.json",
+            "http://localhost:8080/v3/api-docs/dashboard": "$buildDir/dashboard.json"
     ])
 }
 
@@ -49,8 +47,6 @@ dependencies {
     // test
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
-    // docker
-    //developmentOnly "org.springframework.boot:spring-boot-docker-compose"
     // app.yaml
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }

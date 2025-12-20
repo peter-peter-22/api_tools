@@ -1,35 +1,29 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from "react-hook-form"
-import type z from 'zod'
-import { ZodError } from 'zod'
-import { createApiClient, schemas } from './api/generated/usersApi'
-
-type FormData = z.infer<typeof schemas.UserCreateRequest>
+import { createUserBody } from './api/generated/validation/users';
+import { createUser } from './api/generated/client/users';
+import type { ErrorResponse, UserCreateRequest } from './api/generated/client/openAPIDefinition.schemas';
 
 export default function App() {
-  const { register, handleSubmit, formState: { errors }, setError } = useForm<FormData>({
-    resolver: zodResolver(schemas.UserCreateRequest),
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<UserCreateRequest>({
+    resolver: zodResolver(createUserBody),
   });
 
-  const api = createApiClient("http://localhost:8080")
-
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: UserCreateRequest) => {
     try {
-      const user = await api.createUser(data);
+      const user = await createUser(data);
       console.log("Created user:", user);
       alert('User created!');
     } catch (err: any) {
-      if (err instanceof ZodError) {
-        err.issues.forEach((e) => setError(e.path[0] as any, { message: e.message }));
-      } else if (err.response?.data) {
-        const serverErr = err.response.data as { errors?: Record<string, string> };
-        if (serverErr.errors) {
-          Object.entries(serverErr.errors).forEach(([field, message]) => {
-            setError(field as keyof FormData, { message });
+      const res = err.response?.data as ErrorResponse;
+      console.log(err);
+      if (res) {
+        if (res.errors) {
+          Object.entries(res.errors).forEach(([field, message]) => {
+            setError(field as keyof UserCreateRequest, { message });
           });
         }
       }
-      else console.error(err)
     }
   };
 
