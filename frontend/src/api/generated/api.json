@@ -41,6 +41,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Standard error format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -61,8 +71,8 @@
           "required": true
         },
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -72,7 +82,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Standard error format",
             "content": {
               "application/json": {
                 "schema": {
@@ -104,6 +114,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Standard error format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -130,6 +150,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Standard error format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -192,24 +222,6 @@
           }
         }
       },
-      "ErrorResponse": {
-        "type": "object",
-        "description": "Standard API error response",
-        "properties": {
-          "message": {
-            "type": "string"
-          },
-          "errors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "code": {
-            "type": "string"
-          }
-        }
-      },
       "OrderCreateRequest": {
         "type": "object",
         "description": "Request to create a new order by a user",
@@ -257,6 +269,23 @@
           "userId": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "description": "Standard API error response",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "code": {
+            "type": "string"
           }
         }
       }

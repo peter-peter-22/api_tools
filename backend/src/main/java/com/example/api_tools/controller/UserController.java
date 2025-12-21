@@ -1,14 +1,9 @@
 package com.example.api_tools.controller;
 
-import com.example.api_tools.dto.ErrorResponse;
 import com.example.api_tools.dto.UserCreateRequest;
 import com.example.api_tools.expection.ValidationException;
 import com.example.api_tools.model.User;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -40,10 +35,6 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Create a new user")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = User.class))),
-            @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateRequest request) {
         User user = new User(idCounter++, request.name(), request.email(), request.age());
         if (usernameTaken(user.getName()))

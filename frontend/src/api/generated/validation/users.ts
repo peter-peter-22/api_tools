@@ -36,3 +36,10 @@ export const createUserBody = zod.object({
   "age": zod.number().min(createUserBodyAgeMin).describe('Age must be 18+')
 }).describe('Request to create a new user')
 
+export const createUserResponse = zod.object({
+  "id": zod.number().optional(),
+  "name": zod.string().optional(),
+  "email": zod.string().optional(),
+  "age": zod.number().optional()
+}).describe('Public user profile')
+

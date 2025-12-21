@@ -36,17 +36,6 @@ export interface User {
   age?: number;
 }
 
-export type ErrorResponseErrors = {[key: string]: string};
-
-/**
- * Standard API error response
- */
-export interface ErrorResponse {
-  message?: string;
-  errors?: ErrorResponseErrors;
-  code?: string;
-}
-
 /**
  * Request to create a new order by a user
  */
@@ -65,5 +54,16 @@ export interface Order {
   itemId?: number;
   count?: number;
   userId?: number;
+}
+
+export type ErrorResponseErrors = {[key: string]: string};
+
+/**
+ * Standard API error response
+ */
+export interface ErrorResponse {
+  message?: string;
+  errors?: ErrorResponseErrors;
+  code?: string;
 }
 
