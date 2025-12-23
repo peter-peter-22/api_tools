@@ -1,5 +1,5 @@
 spring:
   application:
     name: api_tools
-springdoc:
+springdoc: # swagger url: http://localhost:8080/swagger-ui.html
   default-produces-media-type: application/json
